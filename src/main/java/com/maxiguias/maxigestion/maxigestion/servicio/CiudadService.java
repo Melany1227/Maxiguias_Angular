@@ -35,4 +35,5 @@ public class CiudadService {
     public void eliminarPorId(Long id) {
         ciudadRepository.deleteById(id);
     }
+    
 }
