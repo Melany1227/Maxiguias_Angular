@@ -1,8 +1,8 @@
 package com.maxiguias.maxigestion.maxigestion.controlador;
 
 import java.util.List;
+import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,24 +18,28 @@ import com.maxiguias.maxigestion.maxigestion.servicio.RolService;
 
 @RestController
 @RequestMapping("/api/roles")
-public class RolRestController {
+public class RolController {
 
-    @Autowired
-    private RolService rolService;
+    private final RolService rolService;
+
+    public RolController(RolService rolService) {
+        this.rolService = rolService;
+    }
 
     @GetMapping
-    public ResponseEntity<List<Rol>> obtenerRoles() {
-        List<Rol> roles = rolService.obtenerTodosLosRoles();
+    public ResponseEntity<List<Rol>> listarRoles() {
+        List<Rol> roles = rolService.listarRoles();
         return ResponseEntity.ok(roles);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Rol> obtenerRolPorId(@PathVariable Long id) {
-        Rol rol = rolService.obtenerPorId(id);
-        if (rol == null) {
+        Optional<Rol> rol = rolService.obtenerRolPorId(id);
+        if (rol.isPresent()) {
+            return ResponseEntity.ok(rol.get());
+        } else {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(rol);
     }
 
     @PostMapping
@@ -46,20 +50,24 @@ public class RolRestController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Rol> actualizarRol(@PathVariable Long id, @RequestBody Rol rol) {
-        if (rolService.obtenerPorId(id) == null) {
+        Optional<Rol> rolExistente = rolService.obtenerRolPorId(id);
+        if (rolExistente.isPresent()) {
+            rol.setId(id);
+            Rol rolActualizado = rolService.guardarRol(rol);
+            return ResponseEntity.ok(rolActualizado);
+        } else {
             return ResponseEntity.notFound().build();
         }
-        rol.setId(id);
-        Rol rolActualizado = rolService.actualizarRol(rol);
-        return ResponseEntity.ok(rolActualizado);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> eliminarRol(@PathVariable Long id) {
-        if (rolService.obtenerPorId(id) == null) {
+        Optional<Rol> rol = rolService.obtenerRolPorId(id);
+        if (rol.isPresent()) {
+            rolService.eliminarRol(id);
+            return ResponseEntity.ok("Rol eliminado exitosamente");
+        } else {
             return ResponseEntity.notFound().build();
         }
-        rolService.eliminarPorId(id);
-        return ResponseEntity.ok("Rol eliminado exitosamente.");
     }
 }

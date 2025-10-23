@@ -1,8 +1,8 @@
 package com.maxiguias.maxigestion.maxigestion.controlador;
 
 import java.util.List;
+import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,24 +18,28 @@ import com.maxiguias.maxigestion.maxigestion.servicio.CiudadService;
 
 @RestController
 @RequestMapping("/api/ciudades")
-public class CiudadRestController {
+public class CiudadController {
 
-    @Autowired
-    private CiudadService ciudadService;
+    private final CiudadService ciudadService;
+
+    public CiudadController(CiudadService ciudadService) {
+        this.ciudadService = ciudadService;
+    }
 
     @GetMapping
-    public ResponseEntity<List<Ciudad>> obtenerCiudades() {
-        List<Ciudad> ciudades = ciudadService.obtenerTodasLasCiudades();
+    public ResponseEntity<List<Ciudad>> listarCiudades() {
+        List<Ciudad> ciudades = ciudadService.listarCiudades();
         return ResponseEntity.ok(ciudades);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Ciudad> obtenerCiudadPorId(@PathVariable Long id) {
-        Ciudad ciudad = ciudadService.obtenerPorId(id);
-        if (ciudad == null) {
+    public ResponseEntity<Ciudad> obtenerCiudadPorId(@PathVariable int id) {
+        Optional<Ciudad> ciudad = ciudadService.obtenerCiudadPorId(id);
+        if (ciudad.isPresent()) {
+            return ResponseEntity.ok(ciudad.get());
+        } else {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(ciudad);
     }
 
     @PostMapping
@@ -46,20 +50,24 @@ public class CiudadRestController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Ciudad> actualizarCiudad(@PathVariable Long id, @RequestBody Ciudad ciudad) {
-        if (ciudadService.obtenerPorId(id) == null) {
+        Optional<Ciudad> ciudadExistente = ciudadService.obtenerCiudadPorId(id.intValue());
+        if (ciudadExistente.isPresent()) {
+            ciudad.setId(id.intValue());
+            Ciudad ciudadActualizada = ciudadService.guardarCiudad(ciudad);
+            return ResponseEntity.ok(ciudadActualizada);
+        } else {
             return ResponseEntity.notFound().build();
         }
-        ciudad.setId(id.intValue());
-        Ciudad ciudadActualizada = ciudadService.actualizarCiudad(ciudad);
-        return ResponseEntity.ok(ciudadActualizada);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> eliminarCiudad(@PathVariable Long id) {
-        if (ciudadService.obtenerPorId(id) == null) {
+    public ResponseEntity<String> eliminarCiudad(@PathVariable int id) {
+        Optional<Ciudad> ciudad = ciudadService.obtenerCiudadPorId(id);
+        if (ciudad.isPresent()) {
+            ciudadService.eliminarCiudad(id);
+            return ResponseEntity.ok("Ciudad eliminada exitosamente");
+        } else {
             return ResponseEntity.notFound().build();
         }
-        ciudadService.eliminarPorId(id);
-        return ResponseEntity.ok("Ciudad eliminada exitosamente.");
     }
 }

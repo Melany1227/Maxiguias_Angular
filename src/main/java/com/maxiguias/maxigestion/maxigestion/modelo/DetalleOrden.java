@@ -2,26 +2,27 @@ package com.maxiguias.maxigestion.maxigestion.modelo;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 @Entity
-@Table(name = "DETALLE_FACTURAS")
+@Table(name = "detalle_ordenes")
 @Data
-public class DetalleFactura {
+@IdClass(DetalleOrdenId.class)
+public class DetalleOrden implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JoinColumn(name = "ID_DETALLE_FACTURA")
-    private Long id_detalle_factura;
-
     @ManyToOne
     @JoinColumn(name = "ID_FACTURA")
-    private Factura factura;
+    @JsonBackReference
+    private Orden orden;
 
+    @Id
     @ManyToOne
-    @JoinColumn(name = "ID_PRODUCTO")
-    private Producto producto;
+    @JoinColumn(name = "ID_TERMINADO")
+    private Terminado terminado;
 
     @Column(name = "DESCRIPCION_PRODUCTO")
     private String descripcion;
@@ -32,4 +33,3 @@ public class DetalleFactura {
     @Column(name = "VALOR_PRODUCTO")
     private BigDecimal valor;
 }
-

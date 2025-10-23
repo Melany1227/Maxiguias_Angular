@@ -1,6 +1,7 @@
 package com.maxiguias.maxigestion.maxigestion.servicio;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -20,19 +21,15 @@ public class PerfilService {
         return perfilRepository.findAll();
     }
 
-    public Perfil obtenerPorId(Long id) {
-        return perfilRepository.findById(id).orElse(null);
+    public Optional<Perfil> obtenerPerfilPorId(Long id) {
+        return perfilRepository.findById(id);
     }
 
     public Perfil guardarPerfil(Perfil perfil) {
         return perfilRepository.save(perfil);
     }
 
-    public Perfil actualizarPerfil(Perfil perfil) {
-        return perfilRepository.save(perfil);
-    }
-
-    public void eliminarPorId(Long id) {
+    public void eliminarPerfil(Long id) {
         perfilRepository.deleteById(id);
     }
 }

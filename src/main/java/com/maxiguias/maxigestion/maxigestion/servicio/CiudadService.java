@@ -1,6 +1,7 @@
 package com.maxiguias.maxigestion.maxigestion.servicio;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -16,24 +17,19 @@ public class CiudadService {
         this.ciudadRepository = ciudadRepository;
     }
 
-    public List<Ciudad> obtenerTodasLasCiudades() {
+    public List<Ciudad> listarCiudades() {
         return ciudadRepository.findAll();
     }
 
-    public Ciudad obtenerPorId(Long id) {
-        return ciudadRepository.findById(id).orElse(null);
+    public Optional<Ciudad> obtenerCiudadPorId(int id) {
+        return ciudadRepository.findById(id);
     }
 
     public Ciudad guardarCiudad(Ciudad ciudad) {
         return ciudadRepository.save(ciudad);
     }
 
-    public Ciudad actualizarCiudad(Ciudad ciudad) {
-        return ciudadRepository.save(ciudad);
-    }
-
-    public void eliminarPorId(Long id) {
+    public void eliminarCiudad(int id) {
         ciudadRepository.deleteById(id);
     }
-    
 }
