@@ -1,6 +1,7 @@
 package com.maxiguias.maxigestion.maxigestion.servicio;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -16,23 +17,19 @@ public class RolService {
         this.rolRepository = rolRepository;
     }
 
-    public List<Rol> obtenerTodosLosRoles() {
+    public List<Rol> listarRoles() {
         return rolRepository.findAll();
     }
 
-    public Rol obtenerPorId(Long id) {
-        return rolRepository.findById(id).orElse(null);
+    public Optional<Rol> obtenerRolPorId(Long id) {
+        return rolRepository.findById(id);
     }
 
     public Rol guardarRol(Rol rol) {
         return rolRepository.save(rol);
     }
 
-    public Rol actualizarRol(Rol rol) {
-        return rolRepository.save(rol);
-    }
-
-    public void eliminarPorId(Long id) {
+    public void eliminarRol(Long id) {
         rolRepository.deleteById(id);
     }
 }

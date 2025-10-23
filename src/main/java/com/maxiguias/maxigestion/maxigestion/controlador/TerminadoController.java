@@ -12,7 +12,7 @@ import com.maxiguias.maxigestion.maxigestion.modelo.Terminado;
 import com.maxiguias.maxigestion.maxigestion.servicio.TerminadoService;
 
 @RestController
-@RequestMapping("/terminados")
+@RequestMapping("/api/terminados")
 public class TerminadoController {
 
     private final TerminadoService terminadoService;
