@@ -25,6 +25,6 @@ public class Ciudad {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_departamento")
-    @JsonIgnoreProperties({"ciudades"})
+    @JsonIgnoreProperties({"ciudades", "hibernateLazyInitializer", "handler"})
     private Departamento departamento;
 }

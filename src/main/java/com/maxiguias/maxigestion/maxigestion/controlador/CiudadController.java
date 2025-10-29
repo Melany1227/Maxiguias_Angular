@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.maxiguias.maxigestion.maxigestion.modelo.Ciudad;
@@ -27,8 +28,13 @@ public class CiudadController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Ciudad>> listarCiudades() {
-        List<Ciudad> ciudades = ciudadService.listarCiudades();
+    public ResponseEntity<List<Ciudad>> listarCiudades(@RequestParam(required = false) Integer departamentoId) {
+        List<Ciudad> ciudades;
+        if (departamentoId != null) {
+            ciudades = ciudadService.listarCiudadesPorDepartamento(departamentoId);
+        } else {
+            ciudades = ciudadService.listarCiudades();
+        }
         return ResponseEntity.ok(ciudades);
     }
 

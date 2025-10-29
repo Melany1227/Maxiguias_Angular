@@ -9,10 +9,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.maxiguias.maxigestion.maxigestion.modelo.Producto;
 import com.maxiguias.maxigestion.maxigestion.servicio.ProductoService;
@@ -51,22 +51,28 @@ public class ProductoController {
     }
 
     @PostMapping
-    public ResponseEntity<String> crearProducto(
-            @RequestParam("nombre") String nombre,
-            @RequestParam("cantidadDisponible") Integer cantidadDisponible,
-            @RequestParam(value = "imagen", required = false) String imagen) {
+    public ResponseEntity<String> crearProducto(@RequestBody Producto producto) {
+        
+        System.out.println("=== INICIANDO CREACIÓN DE PRODUCTO ===");
+        System.out.println("ID: " + producto.getId());
+        System.out.println("Nombre: " + producto.getNombre());
+        System.out.println("Terminados: " + (producto.getTerminados() != null ? producto.getTerminados().size() : "null"));
         
         try {
-            Producto producto = new Producto();
-            producto.setNombre(nombre);
-            producto.setCantidadDisponible(cantidadDisponible);
-            producto.setImagen(imagen);
-            
+            System.out.println("URL final del producto: " + producto.getImagen());
             productoService.guardarProducto(producto);
             return ResponseEntity.ok("Producto creado exitosamente");
 
+        } catch (IllegalArgumentException e) {
+            System.out.println("=== ERROR: CÓDIGO DUPLICADO ===");
+            System.out.println("Error: " + e.getMessage());
+            return ResponseEntity.status(400).body("El código ingresado ya existe");
+
         } catch (Exception e) {
-            return ResponseEntity.status(500).body("Error al crear el producto: " + e.getMessage());
+            System.out.println("=== ERROR GENERAL ===");
+            System.out.println("Error: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("Ocurrió un error al crear el producto: " + e.getMessage());
         }
     }
 

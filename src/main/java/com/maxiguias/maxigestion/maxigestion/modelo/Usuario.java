@@ -35,7 +35,7 @@ public class Usuario {
     @Column(name = "TELEFONO", length = 10)
     private Long telefono;
 
-    @Column(name = "USUARIO")
+    @Column(name = "USUARIO", unique = true)
     private String nombreUsuario;
 
     @Column(name = "CONTRASENA")
@@ -58,5 +58,8 @@ public class Usuario {
     @JoinColumn(name = "id_ciudad", nullable = false)
     @JsonIgnoreProperties({"departamento"})
     private Ciudad ciudad;
+
+    @Column(name = "CORREO", length = 100, unique = true)
+    private String correo;
 
 }

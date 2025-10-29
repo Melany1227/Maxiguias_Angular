@@ -32,4 +32,8 @@ public class CiudadService {
     public void eliminarCiudad(int id) {
         ciudadRepository.deleteById(id);
     }
+
+    public List<Ciudad> listarCiudadesPorDepartamento(Integer departamentoId) {
+        return ciudadRepository.findByDepartamento_Id(departamentoId);
+    }
 }

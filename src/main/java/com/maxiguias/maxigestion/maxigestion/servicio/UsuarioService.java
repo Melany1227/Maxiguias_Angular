@@ -55,6 +55,13 @@ public class UsuarioService {
             }
         }
         
+        // Validar si el correo ya existe (solo si se proporciona)
+        if (usuario.getCorreo() != null && !usuario.getCorreo().trim().isEmpty()) {
+            if (usuarioRepository.existsByCorreo(usuario.getCorreo())) {
+                return "Error: Ya existe un usuario con el correo '" + usuario.getCorreo() + "'.";
+            }
+        }
+        
         String tipo = usuario.getTipoUsuario().getNombre().toUpperCase();
 
         if (tipo.equals("NATURAL")) {
@@ -90,6 +97,8 @@ public class UsuarioService {
                 return "Error: Ya existe un usuario con ese nombre de usuario.";
             } else if (mensaje.contains("documento")) {
                 return "Error: Ya existe un usuario con ese documento.";
+            } else if (mensaje.contains("correo")) {
+                return "Error: Ya existe un usuario con ese correo.";
             } else {
                 return "Error: No se pudo guardar el usuario debido a datos duplicados.";
             }
