@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.maxiguias.maxigestion.maxigestion.modelo.DetalleOrden;
+import com.maxiguias.maxigestion.maxigestion.modelo.Empresa;
 import com.maxiguias.maxigestion.maxigestion.modelo.EstadoOrden;
 import com.maxiguias.maxigestion.maxigestion.modelo.Orden;
 import com.maxiguias.maxigestion.maxigestion.repositorio.DetalleOrdenRepository;
@@ -25,6 +26,9 @@ public class OrdenService {
 
     @Transactional
     public Orden guardarOrden(Orden orden) {
+        Empresa empresa = new Empresa();
+        empresa.setNitEmpresa("900123456");
+        orden.setEmpresa(empresa);
         return ordenRepository.save(orden); 
     }
 
