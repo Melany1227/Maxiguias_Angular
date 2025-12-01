@@ -3,6 +3,7 @@ package com.maxiguias.maxigestion.maxigestion.controlador;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -11,7 +12,8 @@ import com.maxiguias.maxigestion.maxigestion.modelo.Empresa;
 import com.maxiguias.maxigestion.maxigestion.servicio.EmpresaService;
 
 @RestController
-@RequestMapping("/empresas")
+@RequestMapping("/api/empresas")
+@PreAuthorize("hasRole('ADMIN')")
 public class EmpresaController {
 
     private final EmpresaService empresaService;

@@ -18,10 +18,11 @@ public interface ProductoRepository extends JpaRepository<Producto, Long> {
 
     //Consulta SQL
     @Query(value = "SELECT p.id_producto, p.nombre_guia, " +
-           "COALESCE(SUM(df.cantidad_producto), 0) as cantidad_total, " +
-           "COALESCE(AVG(df.valor_producto), 0) as precio_promedio " +
+           "COALESCE(SUM(df.CANTIDAD_PRODUCTO), 0) as cantidad_total, " +
+           "COALESCE(AVG(df.VALOR_PRODUCTO), 0) as precio_promedio " +
            "FROM productos p " +
-           "LEFT JOIN detalle_ordenes df ON p.id_producto = df.id_producto " +
+           "LEFT JOIN terminados t ON p.id_producto = t.ID_PRODUCTO " +
+           "LEFT JOIN detalle_ordenes df ON t.ID_TERMINADO = df.ID_TERMINADO " +
            "GROUP BY p.id_producto, p.nombre_guia", 
            nativeQuery = true)
     List<Object[]> obtenerProductosConEstadisticas();

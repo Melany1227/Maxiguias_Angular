@@ -27,7 +27,7 @@ public class OrdenService {
     @Transactional
     public Orden guardarOrden(Orden orden) {
         Empresa empresa = new Empresa();
-        empresa.setNitEmpresa("900123456");
+        empresa.setNitEmpresa("1097405136-6");
         orden.setEmpresa(empresa);
         return ordenRepository.save(orden); 
     }
